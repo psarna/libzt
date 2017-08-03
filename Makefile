@@ -19,3 +19,6 @@ endif
 ifeq ($(OSTYPE),OpenBSD)
 	include make-bsd.mk
 endif
+ifeq ($(OSTYPE),MINGW32_NT-6.2)
+	include make-mac.mk
+endif
