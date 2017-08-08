@@ -532,6 +532,8 @@ int zts_connect(ZT_CONNECT_SIG) {
 			port = ((struct sockaddr_in6*)addr)->sin6_port;
 		}
 		DEBUG_EXTRA("fd = %d, %s : %d", fd, ipstr, ntohs(port));
+		char ipbuf[64];
+		DEBUG_EXTRA("iaddr =  %s", iaddr.toString(ipbuf));
 		tap = getTapByAddr(iaddr);
 		if(!tap) {
 			DEBUG_ERROR("no route to host");
@@ -1742,10 +1744,14 @@ ZeroTier::SocketTap *getTapByAddr(ZeroTier::InetAddress &addr)
 	for(int i=0; i<ZeroTier::vtaps.size(); i++) {
 		s = (ZeroTier::SocketTap*)ZeroTier::vtaps[i];
 		for(int j=0; j<s->_ips.size(); j++) {
+			char ipbuf[64];
+			char ipbuf2[64];
+			DEBUG_INFO("Looking for route to (%s) tap with address: %s", addr.toString(ipbuf), s->_ips[j].toString(ipbuf2));
 			if(s->_ips[j].isEqualPrefix(addr) 
 				|| s->_ips[j].ipsEqual(addr) 
 				|| s->_ips[j].containsAddress(addr)) 
 			{
+				DEBUG_INFO(" -> Found. Using this tap.");
 				tap = s;
 			}
 		}
